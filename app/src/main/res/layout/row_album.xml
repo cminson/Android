@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/defaultphoto" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="55dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginTop="15dp"
+        android:text="TextView"
+        android:textStyle="normal"
+        android:textSize="16dp"
+        android:textColor="@color/defaultTextColor"
+        android:background="#00FFFFFF"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/attribute1"
+        android:gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:text="10,999"
+        android:textStyle="normal"
+        android:textSize="10dp"
+        android:background="#00FFFFFF"
+        android:textColor="@color/defaultTextColor"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/attribute2"
+        android:gravity="center"
+        android:layout_width="60dp"
+        android:layout_height="15dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="26dp"
+        android:text="99,888:42:28"
+        android:textStyle="normal"
+        android:textSize="10dp"
+        android:background="#00FFFFFF"
+        android:textColor="@color/defaultTextColor"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="parent"
+        />
+
+
+
+
+</android.support.constraint.ConstraintLayout>

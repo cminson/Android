@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:label="Talk Player"
+    android:keepScreenOn="true"
+    android:background="#ffffff">
+
+
+    <TextView
+        android:id="@+id/StatusHeader"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:maxLines="1"
+        android:lines="1"
+        android:textSize="20dp"
+        android:text="00:00:00"
+        android:layout_marginTop="5dp"
+        android:background="@color/mp3DisplayBackground"
+        android:textColor= "@color/mp3DisplayHeader"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        />
+
+    <TextView
+        android:id="@+id/talkTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="2"
+        android:lines="2"
+        android:textSize="17dp"
+        android:textColor="@color/defaultTextColor"
+        android:text=""
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/StatusHeader"
+        />
+
+    <TextView
+        android:id="@+id/talkSpeaker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="1"
+        android:lines="1"
+        android:textSize="17dp"
+        android:textColor="@color/defaultTextColor"
+        android:text=""
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/talkTitle"
+        />
+
+
+    <Button
+        android:id="@+id/buttonFastBackward"
+        android:layout_width="52dp"
+        android:layout_height="36dp"
+        android:text=""
+        android:background="@drawable/ic_playfastleft_states"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/talkSpeaker"
+        app:layout_constraintRight_toLeftOf="@+id/buttonPlayPause"
+        style="?android:attr/borderlessButtonStyle"
+        />
+
+    <Button
+        android:id="@+id/buttonPlayPause"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/ic_playactive"
+        android:gravity="center_horizontal"
+        android:text=""
+        android:layout_marginTop="30dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/talkSpeaker"
+        style="?android:attr/borderlessButtonStyle"
+        />
+
+    <ProgressBar
+        android:id="@+id/busyIndicator"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/talkSpeaker"
+        />
+
+    <Button
+        android:id="@+id/buttonFastForward"
+        android:layout_width="52dp"
+        android:layout_height="36dp"
+        android:text=""
+        android:background="@drawable/ic_playfastright_states"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/talkSpeaker"
+        app:layout_constraintLeft_toRightOf="@+id/buttonPlayPause"
+        style="?android:attr/borderlessButtonStyle"
+        />
+
+    <Button
+        android:id="@+id/buttonSequenceOnOff"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_sequenceoff"
+        android:gravity="center_horizontal"
+        android:text=""
+        android:layout_marginTop="35dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPlayPause"
+        style="?android:attr/borderlessButtonStyle"
+        />
+
+    <TextView
+        android:id="@+id/linkTranscript"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Transcript"
+        android:textColor="@color/linkColor"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="35dp"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPlayPause"
+        />
+
+
+
+    <TextView
+        android:id="@+id/textSequence"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:maxLines="1"
+        android:lines="1"
+        android:textSize="14dp"
+        android:textColor="@color/defaultTextColor"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="5dp"
+        android:text="Play talks in sequence"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonSequenceOnOff"
+        />
+
+    <TextView
+        android:id="@+id/separatorBar"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="|"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/textSequence"
+    />
+
+    <TextView
+        android:id="@+id/timeCurrent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/textSequence"
+        app:layout_constraintRight_toLeftOf="@+id/separatorBar"
+    />
+
+    <TextView
+        android:id="@+id/timeMax"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00:00"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/textSequence"
+        app:layout_constraintLeft_toRightOf="@+id/separatorBar"
+        />
+
+
+    <SeekBar
+        android:id="@+id/talkBar"
+        android:layout_height="30dp"
+        android:layout_width="fill_parent"
+        android:layout_marginTop="45dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        app:layout_constraintTop_toBottomOf="@+id/textSequence"
+        />
+
+
+    <TextView
+        android:id="@+id/linkDonate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="Donate"
+        android:textColor="@color/linkColor"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="35dp"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+
+
+
+</android.support.constraint.ConstraintLayout>

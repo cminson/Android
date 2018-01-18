@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Audio Dharma</string>
+    <string name="search_hint">search</string>
+    <string name="title_activity_album_controller">AlbumController</string>
+</resources>
