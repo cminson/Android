@@ -3,7 +3,6 @@ package com.christopherminson.audiodharma
 import android.graphics.Color
 import android.content.Context
 import android.content.SharedPreferences
-import com.github.kittinunf.result.Result
 import org.json.JSONObject
 import java.util.*
 import android.preference.PreferenceManager
@@ -23,13 +22,13 @@ import android.support.v7.app.AppCompatActivity
 import com.github.kittinunf.fuel.httpPost
 import org.jetbrains.anko.doAsync
 import org.json.JSONArray
-import android.os.Message
-
 
 
 val TheDataModel = Model()
 var TheUserLocation = UserLocation()
-val DEVICE_ID = UUID.randomUUID().toString()
+//var DEVICE_ID = UUID.randomUUID().toString()
+var DEVICE_ID : String? = "NA"
+
 
 // all possible web config points
 val HostAccessPoints = arrayOf(
@@ -40,18 +39,19 @@ val HostAccessPoints = arrayOf(
 val HostAccessPoint: String = HostAccessPoints[0]   // the one we're currently using
 
 // paths for services
-val CONFIG_ZIP_NAME = "CONFIG00.ZIP"
-val CONFIG_JSON_NAME = "CONFIG00.JSON"
+//val CONFIG_ZIP_NAME = "CONFIG00.ZIP"
+//val CONFIG_JSON_NAME = "CONFIG00.JSON"
 
-//val CONFIG_ZIP_NAME = "DEVCONFIG00.ZIP"
-//val CONFIG_JSON_NAME = "DEVCONFIG00.JSON"
+val CONFIG_ZIP_NAME = "DEV00.ZIP"
+val CONFIG_JSON_NAME = "DEV00.JSON"
 
 var APP_ROOT_PATH = ""      // root for all app storage
 var MP3_DOWNLOADS_PATH = ""      // where MP3s are downloaded.  this is set up in loadData()
 
 var CONFIG_ACCESS_PATH = "/AudioDharmaAppBackend/Config/" + CONFIG_ZIP_NAME    // remote web path to config
 var CONFIG_REPORT_ACTIVITY_PATH = "/AudioDharmaAppBackend/Access/reportactivity.php"     // where to report user activity (shares, listens)
-var CONFIG_GET_ACTIVITY_PATH = "/AudioDharmaAppBackend/Access/getactivity.php"           // where to get sangha activity (shares, listens)
+//var CONFIG_GET_ACTIVITY_PATH = "/AudioDharmaAppBackend/Access/getactivity.php"           // where to get sangha activity (shares, listens)
+var CONFIG_GET_ACTIVITY_PATH = "/AudioDharmaAppBackend/Access/XGETACTIVITY.php?"        // where to get sangha activity (shares, listens)
 val DEFAULT_MP3_PATH = "https://www.audiodharma.org"     // where to get talks
 val DEFAULT_DONATE_PATH = "https://audiodharma.org/donate/"       // where to donate
 
@@ -260,6 +260,7 @@ class Model {
 
     fun loadData(context: Context) {
 
+
         HTTPResultCode = 0
         URL_CONFIGURATION = HostAccessPoint + CONFIG_ACCESS_PATH
         URL_REPORT_ACTIVITY = HostAccessPoint + CONFIG_REPORT_ACTIVITY_PATH
@@ -275,6 +276,7 @@ class Model {
         }
 
         StorageHandle = PreferenceManager.getDefaultSharedPreferences(context)
+        setDeviceID()
 
         // IMPORTANT: this must be done at init time, otherwise possible race condition
         // in the case where no wifi and stats calculation then reference null content
@@ -662,9 +664,11 @@ class Model {
 
         if (TheDataModel.isInternetAvailable() == false) return
 
+        DEVICE_ID?.LOG()
         var responseData: String?
+        var getActivity = URL_GET_ACTIVITY + "DEVICEID=" + DEVICE_ID
         try {
-            responseData = URL(URL_GET_ACTIVITY).readText()
+            responseData = URL(getActivity).readText()
 
         } catch (e: Exception ) { return }
 
@@ -1203,6 +1207,19 @@ class Model {
             }
         }
         return userAlbums
+    }
+
+    fun setDeviceID() {
+
+        DEVICE_ID = StorageHandle?.getString("DEVICE_ID", null)
+        if (DEVICE_ID == null) {
+
+            DEVICE_ID = UUID.randomUUID().toString()
+            val storageEdit = StorageHandle?.edit()
+            storageEdit?.putString("DEVICE_ID", DEVICE_ID)
+            storageEdit?.apply()
+
+        }
     }
 
 
