@@ -37,6 +37,25 @@ class MP3Controller : AppCompatActivity() {
 
     var TheMediaPlayer: MediaPlayer? = null
 
+    lateinit var StatusHeader: TextView
+    lateinit var TalkTitle: TextView
+    lateinit var TalkSpeaker: TextView
+
+    lateinit var ButtonPlayPause: Button
+    lateinit var BusyIndicator: ProgressBar
+    lateinit var ButtonFastForward: Button
+    lateinit var ButtonFastBackward: Button
+
+    lateinit var ButtonSequenceOnOff: Button
+    lateinit var TextSequence: TextView
+
+    lateinit var LinkTranscript: TextView
+    lateinit var LinkDonate: TextView
+
+    lateinit var TimeCurrent: TextView
+    lateinit var TimeMax: TextView
+    lateinit var TalkBar: SeekBar
+    /*
     val StatusHeader: TextView by lazy { findViewById<TextView>(R.id.StatusHeader) }
     val TalkTitle: TextView by lazy { findViewById<TextView>(R.id.talkTitle) }
     val TalkSpeaker: TextView by lazy { findViewById<TextView>(R.id.talkSpeaker) }
@@ -54,6 +73,7 @@ class MP3Controller : AppCompatActivity() {
     val TimeCurrent: TextView by lazy { findViewById<TextView>(R.id.timeCurrent) }
     val TimeMax: TextView by lazy { findViewById<TextView>(R.id.timeMax) }
     val TalkBar: SeekBar by lazy { findViewById<SeekBar>(R.id.talkBar) }
+    */
 
     var SequenceModeOn = false
     var WebViewActive = false
@@ -64,10 +84,30 @@ class MP3Controller : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+        println("AD: MP3 Create")
 
         getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         setContentView(R.layout.player)
         this.setFinishOnTouchOutside(false)
+
+        StatusHeader = findViewById<TextView>(R.id.StatusHeader)
+        TalkTitle = findViewById<TextView>(R.id.talkTitle)
+        TalkSpeaker = findViewById<TextView>(R.id.talkSpeaker)
+
+        ButtonPlayPause = findViewById<Button>(R.id.buttonPlayPause)
+        BusyIndicator = findViewById<ProgressBar>(R.id.busyIndicator)
+        ButtonFastForward = findViewById<Button>(R.id.buttonFastForward)
+        ButtonFastBackward = findViewById<Button>(R.id.buttonFastBackward)
+        ButtonSequenceOnOff = findViewById<Button>(R.id.buttonSequenceOnOff)
+        TextSequence = findViewById<TextView>(R.id.textSequence)
+
+        LinkTranscript = findViewById<TextView>(R.id.linkTranscript)
+        LinkDonate = findViewById<TextView>(R.id.linkDonate)
+
+        TimeCurrent = findViewById<TextView>(R.id.timeCurrent)
+        TimeMax = findViewById<TextView>(R.id.timeMax)
+        TalkBar = findViewById<SeekBar>(R.id.talkBar)
+
 
         ButtonPlayPause.setOnClickListener { this.toggleStartStopTalk() }
         ButtonFastForward.setOnClickListener { this.fastForward() }
@@ -233,6 +273,7 @@ class MP3Controller : AppCompatActivity() {
 
         TalkPlayState = TALK_PLAY_STATE.PLAYING
 
+        println("AD: Starting Talk")
         TheMediaPlayer?.setOnPreparedListener(object : MediaPlayer.OnPreparedListener {
 
             override fun onPrepared(p0: MediaPlayer?) {
@@ -274,6 +315,8 @@ class MP3Controller : AppCompatActivity() {
             }
 
         } else {
+
+            println("AD: Starting Talk 2")
 
             url = URL_MP3_HOST + PlayingTalk.URL
             TheMediaPlayer?.setDataSource(url)

@@ -1,0 +1,5 @@
+
+0) Gradle Scripts:  Update versionCode and VersionName
+1) Build: Rebuild Project
+2) Build: Generate App  (NOT SIGNED APP)
+3) Goto Google Console.  Release Management.  Upload APK and proceed.

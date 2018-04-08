@@ -21,6 +21,7 @@ import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.SearchView
 
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.*
 import android.widget.*
 import org.jetbrains.anko.doAsync

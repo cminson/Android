@@ -39,11 +39,11 @@ val HostAccessPoints = arrayOf(
 val HostAccessPoint: String = HostAccessPoints[0]   // the one we're currently using
 
 // paths for services
-//val CONFIG_ZIP_NAME = "CONFIG00.ZIP"
-//val CONFIG_JSON_NAME = "CONFIG00.JSON"
+val CONFIG_ZIP_NAME = "CONFIG00.ZIP"
+val CONFIG_JSON_NAME = "CONFIG00.JSON"
 
-val CONFIG_ZIP_NAME = "DEV00.ZIP"
-val CONFIG_JSON_NAME = "DEV00.JSON"
+//val CONFIG_ZIP_NAME = "DEV00.ZIP"
+//val CONFIG_JSON_NAME = "DEV00.JSON"
 
 var APP_ROOT_PATH = ""      // root for all app storage
 var MP3_DOWNLOADS_PATH = ""      // where MP3s are downloaded.  this is set up in loadData()
@@ -260,6 +260,8 @@ class Model {
 
     fun loadData(context: Context) {
 
+        StorageHandle = PreferenceManager.getDefaultSharedPreferences(context)
+        setDeviceID()
 
         HTTPResultCode = 0
         URL_CONFIGURATION = HostAccessPoint + CONFIG_ACCESS_PATH
@@ -275,8 +277,6 @@ class Model {
         if (!File(MP3_DOWNLOADS_PATH).mkdirs()) {
         }
 
-        StorageHandle = PreferenceManager.getDefaultSharedPreferences(context)
-        setDeviceID()
 
         // IMPORTANT: this must be done at init time, otherwise possible race condition
         // in the case where no wifi and stats calculation then reference null content
@@ -320,11 +320,15 @@ class Model {
         val pathZipFile = APP_ROOT_PATH + "/" + CONFIG_ZIP_NAME
         val pathJSONFile = APP_ROOT_PATH + "/" + CONFIG_JSON_NAME
 
+        "DownloadAndConfigure".LOG()
         // get zip file and store it off
         var responseData: ByteArray? = null
 
+        //val test = "http://www.virtualdharma.org/AudioDharmaAppBackend/Config/TEST"
         try {
             responseData = URL(path).readBytes()
+            //responseData = URL(test).readBytes()
+
 
             var inputStream: InputStream = responseData.inputStream()
             var outFile = File(pathZipFile)
@@ -333,11 +337,15 @@ class Model {
             inputStream.close()
             outputStream.close()
         } catch (e: Exception) {
-
+            //"EXCEPTION".LOG()
+            e.printStackTrace()
+            return
         }
 
+        "UNZIP".LOG()
         // unzip it
         if (responseData != null) {
+            //"UNZIPPING".LOG()
             if (responseData.count() > MIN_EXPECTED_RESPONSE_SIZE) MyUnZip.unzip(pathZipFile, APP_ROOT_PATH)
         }
 
@@ -351,6 +359,7 @@ class Model {
             return
         }
 
+        "HAVE JSON".LOG()
         val jsonObj = JSONObject(configJSON)
 
 
@@ -664,7 +673,7 @@ class Model {
 
         if (TheDataModel.isInternetAvailable() == false) return
 
-        DEVICE_ID?.LOG()
+        "downloadSanghaActivity"?.LOG()
         var responseData: String?
         var getActivity = URL_GET_ACTIVITY + "DEVICEID=" + DEVICE_ID
         try {
@@ -1220,6 +1229,7 @@ class Model {
             storageEdit?.apply()
 
         }
+        DEVICE_ID?.LOG()
     }
 
 
