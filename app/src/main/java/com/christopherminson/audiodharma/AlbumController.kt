@@ -127,6 +127,7 @@ class AlbumController : AbstractAlbumController() {
                     launch_screen.visibility = View.GONE
 
                     getSupportActionBar()?.setTitle("Audio Dharma")
+                    //getSupportActionBar()?.setTitle(DEVICE_ID) // DEV TEST
 
                 }
             }

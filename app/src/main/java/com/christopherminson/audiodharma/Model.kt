@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity
 import com.github.kittinunf.fuel.httpPost
 import org.jetbrains.anko.doAsync
 import org.json.JSONArray
+import java.net.HttpURLConnection
 
 
 val TheDataModel = Model()
@@ -231,27 +232,27 @@ class Model {
     var SeriesAlbums = ArrayList<AlbumData>() // array of Albums for all series
     var RecommendedAlbums = ArrayList<AlbumData>() // array of recommended Albums
 
-    var KeyToTalks = HashMap<String, ArrayList<TalkData>> () // dictionary keyed by content, value talk list
-    var KeyToAlbumStats = HashMap<String, AlbumStats> ()
-    var FileNameToTalk = HashMap<String, TalkData> ()
+    var KeyToTalks = HashMap<String, ArrayList<TalkData>>() // dictionary keyed by content, value talk list
+    var KeyToAlbumStats = HashMap<String, AlbumStats>()
+    var FileNameToTalk = HashMap<String, TalkData>()
 
-    var UserTalkHistoryAlbum = ArrayList<TalkData> ()
-    var UserShareHistoryAlbum = ArrayList<TalkData> ()
+    var UserTalkHistoryAlbum = ArrayList<TalkData>()
+    var UserShareHistoryAlbum = ArrayList<TalkData>()
 
     var UserTalkHistoryStats: AlbumStats? = null
 
-    var SanghaTalkHistoryAlbum = ArrayList<TalkData> ()
+    var SanghaTalkHistoryAlbum = ArrayList<TalkData>()
     var SanghaTalkHistoryStats: AlbumStats? = null
 
-    var SanghaShareHistoryAlbum = ArrayList<TalkData> ()
+    var SanghaShareHistoryAlbum = ArrayList<TalkData>()
     var SanghaShareHistoryStats: AlbumStats? = null
 
-    var AllTalks = ArrayList<TalkData> ()
+    var AllTalks = ArrayList<TalkData>()
 
-    var UserAlbums = HashMap<String, UserAlbumData> ()
-    var UserNotes = HashMap<String, String> ()
-    var UserFavorites = HashMap<String, Boolean> ()
-    var UserDownloads = HashMap<String, Boolean> ()
+    var UserAlbums = HashMap<String, UserAlbumData>()
+    var UserNotes = HashMap<String, String>()
+    var UserFavorites = HashMap<String, Boolean>()
+    var UserDownloads = HashMap<String, Boolean>()
 
     var Initialized = false
     var StorageHandle: SharedPreferences? = null
@@ -280,7 +281,9 @@ class Model {
 
         // IMPORTANT: this must be done at init time, otherwise possible race condition
         // in the case where no wifi and stats calculation then reference null content
-        for (dataContent in DATA_ALBUMS) { KeyToTalks[dataContent] = arrayListOf() }
+        for (dataContent in DATA_ALBUMS) {
+            KeyToTalks[dataContent] = arrayListOf()
+        }
 
         downloadAndConfigure(URL_CONFIGURATION)
     }
@@ -292,7 +295,7 @@ class Model {
         SeriesAlbums = arrayListOf()
         RecommendedAlbums = arrayListOf()
 
-        KeyToTalks  = hashMapOf()
+        KeyToTalks = hashMapOf()
 
         KeyToAlbumStats = hashMapOf()
         FileNameToTalk = hashMapOf()
@@ -302,7 +305,7 @@ class Model {
         SanghaTalkHistoryAlbum = arrayListOf()
         SanghaShareHistoryAlbum = arrayListOf()
 
-        AllTalks = ArrayList<TalkData> ()
+        AllTalks = ArrayList<TalkData>()
         AllTalks = arrayListOf()
 
         UserAlbums = hashMapOf()
@@ -310,7 +313,9 @@ class Model {
         UserFavorites = hashMapOf()
         UserDownloads = hashMapOf()
 
-        for (dataContent in DATA_ALBUMS) { KeyToTalks[dataContent] = arrayListOf() }
+        for (dataContent in DATA_ALBUMS) {
+            KeyToTalks[dataContent] = arrayListOf()
+        }
 
     }
 
@@ -320,7 +325,6 @@ class Model {
         val pathZipFile = APP_ROOT_PATH + "/" + CONFIG_ZIP_NAME
         val pathJSONFile = APP_ROOT_PATH + "/" + CONFIG_JSON_NAME
 
-        "DownloadAndConfigure".LOG()
         // get zip file and store it off
         var responseData: ByteArray? = null
 
@@ -342,10 +346,8 @@ class Model {
             return
         }
 
-        "UNZIP".LOG()
         // unzip it
         if (responseData != null) {
-            //"UNZIPPING".LOG()
             if (responseData.count() > MIN_EXPECTED_RESPONSE_SIZE) MyUnZip.unzip(pathZipFile, APP_ROOT_PATH)
         }
 
@@ -359,7 +361,6 @@ class Model {
             return
         }
 
-        "HAVE JSON".LOG()
         val jsonObj = JSONObject(configJSON)
 
 
@@ -416,18 +417,18 @@ class Model {
 
         val config = jsonObj.getJSONObject("config")
 
-        URL_MP3_HOST = config.getArg("URL_MP3_HOST") ?:  URL_MP3_HOST
-        USE_NATIVE_MP3PATHS = config.getArgBoolean("USE_NATIVE_MP3PATHS") ?:  true
+        URL_MP3_HOST = config.getArg("URL_MP3_HOST") ?: URL_MP3_HOST
+        USE_NATIVE_MP3PATHS = config.getArgBoolean("USE_NATIVE_MP3PATHS") ?: true
 
-        URL_REPORT_ACTIVITY = config.getArg("URL_REPORT_ACTIVITY") ?:  URL_REPORT_ACTIVITY
-        URL_GET_ACTIVITY = config.getArg("URL_GET_ACTIVITY") ?:  URL_GET_ACTIVITY
+        URL_REPORT_ACTIVITY = config.getArg("URL_REPORT_ACTIVITY") ?: URL_REPORT_ACTIVITY
+        URL_GET_ACTIVITY = config.getArg("URL_GET_ACTIVITY") ?: URL_GET_ACTIVITY
 
-        URL_DONATE = config.getArg("URL_DONATE") ?:  URL_DONATE
+        URL_DONATE = config.getArg("URL_DONATE") ?: URL_DONATE
 
-        MAX_TALKHISTORY_COUNT = config.getArgInt("MAX_TALKHISTORY_COUNT") ?:  MAX_TALKHISTORY_COUNT
-        MAX_SHAREHISTORY_COUNT = config.getArgInt("MAX_SHAREHISTORY_COUNT") ?:  MAX_SHAREHISTORY_COUNT
+        MAX_TALKHISTORY_COUNT = config.getArgInt("MAX_TALKHISTORY_COUNT") ?: MAX_TALKHISTORY_COUNT
+        MAX_SHAREHISTORY_COUNT = config.getArgInt("MAX_SHAREHISTORY_COUNT") ?: MAX_SHAREHISTORY_COUNT
 
-        UPDATE_SANGHA_INTERVAL = config.getArgInt("UPDATE_SANGHA_INTERVAL") ?:  UPDATE_SANGHA_INTERVAL
+        UPDATE_SANGHA_INTERVAL = config.getArgInt("UPDATE_SANGHA_INTERVAL") ?: UPDATE_SANGHA_INTERVAL
 
     }
 
@@ -442,15 +443,15 @@ class Model {
         for (i in 0..(talks.length() - 1)) {
             val talk = talks.getJSONObject(i)
 
-            var series = talk.getArg("series") ?:  ""
-            var title = talk.getArg("title") ?:  ""
-            var section = talk.getArg("section") ?:  ""
-            var url = talk.getArg("url") ?:  ""
-            var speaker = talk.getArg("speaker") ?:  ""
-            var date = talk.getArg("date") ?:  ""
-            var duration = talk.getArg("duration") ?:  ""
-            var pdf = talk.getArg("pdf") ?:  ""
-            var keys = talk.getArg("keys") ?:  ""
+            var series = talk.getArg("series") ?: ""
+            var title = talk.getArg("title") ?: ""
+            var section = talk.getArg("section") ?: ""
+            var url = talk.getArg("url") ?: ""
+            var speaker = talk.getArg("speaker") ?: ""
+            var date = talk.getArg("date") ?: ""
+            var duration = talk.getArg("duration") ?: ""
+            var pdf = talk.getArg("pdf") ?: ""
+            var keys = talk.getArg("keys") ?: ""
 
             var fileName = getFileNameFromPath(url)
 
@@ -549,7 +550,7 @@ class Model {
     }
 
 
-    fun  loadAlbums(jsonObj: JSONObject) {
+    fun loadAlbums(jsonObj: JSONObject) {
 
         val albums = jsonObj.getJSONArray("albums")
 
@@ -557,15 +558,15 @@ class Model {
         for (i in 0..albums.length() - 1) {
             val album = albums.getJSONObject(i)
 
-            var albumSection = album.getArg("section") ?:  ""
-            var albumTitle = album.getArg("title") ?:  ""
-            var albumContent = album.getArg("content") ?:  ""
-            var albumImage = album.getArg("image") ?:  ""
+            var albumSection = album.getArg("section") ?: ""
+            var albumTitle = album.getArg("title") ?: ""
+            var albumContent = album.getArg("content") ?: ""
+            var albumImage = album.getArg("image") ?: ""
 
             // NOTE TBD: for now, we won't support Custom Albums.  Not convinced they're necessary
             if (albumTitle == "Custom Albums") continue
 
-            var albumData =  AlbumData(albumTitle, albumContent, albumSection, albumImage, "")
+            var albumData = AlbumData(albumTitle, albumContent, albumSection, albumImage, "")
 
             if ((albumSection != "") and (albumSection != prevAlbumSection)) {
                 val albumSectionHeader = AlbumData(Title = SECTION_HEADER, Section = albumSection)
@@ -589,10 +590,10 @@ class Model {
 
                     val talk = talkList.getJSONObject(j)
 
-                    var title = talk.getArg("title") ?:  ""
-                    var url = talk.getArg("url") ?:  ""
-                    var section = talk.getArg("section") ?:  ""
-                    var series = talk.getArg("series") ?:  ""
+                    var title = talk.getArg("title") ?: ""
+                    var url = talk.getArg("url") ?: ""
+                    var section = talk.getArg("section") ?: ""
+                    var series = talk.getArg("series") ?: ""
 
                     var fileName = getFileNameFromPath(url)
 
@@ -626,10 +627,12 @@ class Model {
                             "")
 
 
-                    if (doesTalkHaveTranscript(talkData)) { talkData.Title = talkData.Title + " [transcript]" }
+                    if (doesTalkHaveTranscript(talkData)) {
+                        talkData.Title = talkData.Title + " [transcript]"
+                    }
 
-                        // if a series is specified create a series album if not already there.  then add talk to it
-                        // otherwise, just add the talk directly to the parent album
+                    // if a series is specified create a series album if not already there.  then add talk to it
+                    // otherwise, just add the talk directly to the parent album
                     if (series.length > 1) {
 
                         if (series != currentSeries) {
@@ -668,34 +671,38 @@ class Model {
     }
 
 
-    fun downloadSanghaActivity()
-    {
+    fun downloadSanghaActivity() {
 
         if (TheDataModel.isInternetAvailable() == false) return
 
-        "downloadSanghaActivity"?.LOG()
         var responseData: String?
         var getActivity = URL_GET_ACTIVITY + "DEVICEID=" + DEVICE_ID
         try {
             responseData = URL(getActivity).readText()
 
-        } catch (e: Exception ) { return }
+        } catch (e: Exception) {
+            return
+        }
 
         var jsonObj: JSONObject?
         try {
             jsonObj = JSONObject(responseData)
-        } catch (e: Exception) { return }
+        } catch (e: Exception) {
+            return
+        }
 
-        this.SanghaTalkHistoryAlbum = ArrayList<TalkData> ()
-        this.SanghaShareHistoryAlbum = ArrayList<TalkData> ()
+        this.SanghaTalkHistoryAlbum = ArrayList<TalkData>()
+        this.SanghaShareHistoryAlbum = ArrayList<TalkData>()
 
         // compute talk history
         var talkCount = 0
         var totalSeconds = 0
 
         var talkJSONList: JSONArray = JSONArray()
-        try { talkJSONList = jsonObj.getJSONArray("sangha_history") }
-            catch (e: Exception) {}
+        try {
+            talkJSONList = jsonObj.getJSONArray("sangha_history")
+        } catch (e: Exception) {
+        }
 
         for (i in 0..talkJSONList.length() - 1) {
             val history = talkJSONList.getJSONObject(i)
@@ -732,18 +739,20 @@ class Model {
         totalSeconds = 0
 
         talkJSONList = JSONArray()
-        try { talkJSONList = jsonObj.getJSONArray("sangha_shares") }
-            catch (e: Exception) {}
+        try {
+            talkJSONList = jsonObj.getJSONArray("sangha_shares")
+        } catch (e: Exception) {
+        }
 
         for (i in 0..(talkJSONList.length() - 1)) {
 
             val history = talkJSONList.getJSONObject(i)
 
-            var fileName = history.getArg("filename") ?:  ""
-            var city = history.getArg("city") ?:  ""
+            var fileName = history.getArg("filename") ?: ""
+            var city = history.getArg("city") ?: ""
             var date = history.getArg("date") ?: ""
-            var state = history.getArg("state") ?:  ""
-            var country = history.getArg("country") ?:  ""
+            var state = history.getArg("state") ?: ""
+            var country = history.getArg("country") ?: ""
 
             if (this.FileNameToTalk.containsKey(fileName) == false) continue
 
@@ -775,7 +784,9 @@ class Model {
 
             try {
                 talkJSONList = jsonObj.getJSONArray(dataContent)
-            } catch (e: Exception) { continue }
+            } catch (e: Exception) {
+                continue
+            }
 
             for (i in 0..(talkJSONList.length() - 1)) {
 
@@ -799,13 +810,13 @@ class Model {
     }
 
     // timer:  load sangha (community) information every UPDATE_SANGHA_INTERVAL seconds
-    fun startSanghaHistoryTimer () : Timer {
+    fun startSanghaHistoryTimer(): Timer {
 
-        val interval : Long = UPDATE_SANGHA_INTERVAL.toLong() * 1000
+        val interval: Long = UPDATE_SANGHA_INTERVAL.toLong() * 1000
 
         val timer = fixedRateTimer(name = "UPDATE_SANGHA_INTERVAL", daemon = true, initialDelay = interval, period = interval) {
 
-            println("AD UPDATE_SANGHA_INTERVAL")
+            //println("AD UPDATE_SANGHA_INTERVAL")
 
             downloadSanghaActivity()
 
@@ -819,17 +830,14 @@ class Model {
     }
 
 
+    fun downloadMP3(talk: TalkData) : Boolean {
 
-    fun downloadMP3(talk: TalkData) {
 
-        var requestURL: String
+        //"downloadMP3".LOG()
 
         // remote source path for file
-        if (USE_NATIVE_MP3PATHS == true) {
-            requestURL  = URL_MP3_HOST + talk.URL
-        } else {
-            requestURL  = URL_MP3_HOST + "/" + talk.FileName
-        }
+        var requestURL = getFullTalkURL(talk)
+        if (remoteURLExists(requestURL) == false) {return false}
 
         // local destination path for file
         var localPathMP3 = MP3_DOWNLOADS_PATH + "/" + talk.FileName
@@ -837,17 +845,19 @@ class Model {
         this.UserDownloads[talk.FileName] = false
 
         var responseData = URL(requestURL).readBytes()
-        var inputStream : InputStream = responseData.inputStream()
+        var inputStream: InputStream = responseData.inputStream()
 
-        var outFile =  File(localPathMP3)
+        var outFile = File(localPathMP3)
         outFile.setReadable(true, false)
-        var outputStream =  FileOutputStream(outFile)
+        var outputStream = FileOutputStream(outFile)
         inputStream.copyTo(outputStream)
         inputStream.close()
         outputStream.close()
 
         this.UserDownloads[talk.FileName] = true
         this.saveUserDownloadData()
+
+        return true
     }
 
 
@@ -879,7 +889,7 @@ class Model {
     }
 
 
-    fun isInternetAvailable() : Boolean {
+    fun isInternetAvailable(): Boolean {
 
         val activeNetwork = ConnectivityService?.activeNetworkInfo
         val isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting
@@ -929,7 +939,7 @@ class Model {
             totalUserTalkSecondsCount += totalSeconds
 
             val durationDisplay = secondsToDurationDisplay(totalSeconds)
-            val stats = AlbumStats(talkCount, totalSeconds,durationDisplay)
+            val stats = AlbumStats(talkCount, totalSeconds, durationDisplay)
 
             KeyToAlbumStats[album.Content] = stats
         }
@@ -1181,11 +1191,11 @@ class Model {
     }
 
 
-    fun loadUserAlbumData() : HashMap<String, UserAlbumData> {
+    fun loadUserAlbumData(): HashMap<String, UserAlbumData> {
 
         val value = StorageHandle?.getString("USER_ALBUMS", "")
 
-        var userAlbums : HashMap<String, UserAlbumData> = hashMapOf()
+        var userAlbums: HashMap<String, UserAlbumData> = hashMapOf()
 
         if (value == null) return userAlbums
         if (value.count() < STORAGE_MIN) return userAlbums
@@ -1193,15 +1203,15 @@ class Model {
 
         var albumName: String
         var fileNameList = value.split(STORAGE_DELIMITER) as ArrayList<String>
-        var content : String = "0"
+        var content: String = "0"
 
         for (fileName in fileNameList) {
 
             if (fileName.contains("[ALBUMNAME=]")) {
 
-                content =  Random().nextInt().toString()
+                content = Random().nextInt().toString()
 
-                albumName = fileName.replace("[ALBUMNAME=]","")
+                albumName = fileName.replace("[ALBUMNAME=]", "")
                 val album = UserAlbumData(Title = albumName, TalkFileNames = arrayListOf(), Content = content)
                 userAlbums[content] = album
 
@@ -1251,11 +1261,11 @@ class Model {
     }
 
 
-    fun loadUserDownloadData() : HashMap<String, Boolean> {
+    fun loadUserDownloadData(): HashMap<String, Boolean> {
 
         val value = StorageHandle?.getString("USER_DOWNLOADS", "")
 
-        var userDownloads : HashMap<String, Boolean> = hashMapOf()
+        var userDownloads: HashMap<String, Boolean> = hashMapOf()
 
         if (value == null) return userDownloads
         if (value.count() < STORAGE_MIN) return userDownloads
@@ -1291,11 +1301,11 @@ class Model {
     }
 
 
-    fun loadTalkHistoryData() : ArrayList<TalkData> {
+    fun loadTalkHistoryData(): ArrayList<TalkData> {
 
         val value = StorageHandle?.getString("USER_TALKHISTORY", "")
 
-        var talkHistoryList : ArrayList<TalkData> = arrayListOf()
+        var talkHistoryList: ArrayList<TalkData> = arrayListOf()
         if (value == null) return talkHistoryList
 
         if (value.count() < STORAGE_MIN) {
@@ -1335,11 +1345,11 @@ class Model {
     }
 
 
-    fun loadShareHistoryData() : ArrayList<TalkData> {
+    fun loadShareHistoryData(): ArrayList<TalkData> {
 
         val value = StorageHandle?.getString("USER_SHAREHISTORY", "")
 
-        var talkHistoryList : ArrayList<TalkData> = arrayListOf()
+        var talkHistoryList: ArrayList<TalkData> = arrayListOf()
         if (value == null) return talkHistoryList
 
         if (value.count() < STORAGE_MIN) return talkHistoryList
@@ -1380,12 +1390,12 @@ class Model {
     }
 
 
-    fun loadUserNoteData() : HashMap<String, String> {
+    fun loadUserNoteData(): HashMap<String, String> {
 
         val value = StorageHandle?.getString("USER_NOTES", "")
 
         var userNotes: HashMap<String, String> = hashMapOf()
-        var userNoteList : ArrayList<String> = arrayListOf()
+        var userNoteList: ArrayList<String> = arrayListOf()
         if (value == null) return userNotes
 
         if (value.count() > STORAGE_MIN) {
@@ -1394,7 +1404,7 @@ class Model {
 
         val count = userNoteList.count()
         for (i in 0..count - 1 step 2) {
-            var note : String = ""
+            var note: String = ""
 
             var fileName = userNoteList[i]
             if (i + 1 < count) {
@@ -1429,11 +1439,11 @@ class Model {
     }
 
 
-    fun loadUserFavoriteData() : HashMap<String, Boolean> {
+    fun loadUserFavoriteData(): HashMap<String, Boolean> {
 
         val value = StorageHandle?.getString("USER_FAVORITES", "")
 
-        var userFavorites : HashMap<String, Boolean> = hashMapOf()
+        var userFavorites: HashMap<String, Boolean> = hashMapOf()
         var fileNameList: ArrayList<String> = arrayListOf()
         if (value == null) return userFavorites
 
@@ -1463,9 +1473,9 @@ class Model {
         var badDownloads: ArrayList<String> = arrayListOf()
 
         // 1) Enumerate UserDownloads.  If incomplete, remove matching downloads file if any
-        for (( fileName , active) in UserDownloads) {
+        for ((fileName, active) in UserDownloads) {
 
-            if (active == false)      {
+            if (active == false) {
                 badDownloads.add(fileName)
             }
 
@@ -1506,19 +1516,19 @@ class Model {
     }
 
 
-    fun getUserAlbums() : ArrayList<UserAlbumData> {
+    fun getUserAlbums(): ArrayList<UserAlbumData> {
 
-        var userAlbumList : ArrayList<UserAlbumData> = arrayListOf()
+        var userAlbumList: ArrayList<UserAlbumData> = arrayListOf()
         for ((_, album) in UserAlbums) {
 
             userAlbumList.add(album)
         }
         userAlbumList.sortedWith(compareBy({ it.Title }))
-        return(userAlbumList)
+        return (userAlbumList)
     }
 
 
-    fun getAlbums(content: String, query: String) : ArrayList<AlbumData> {
+    fun getAlbums(content: String, query: String): ArrayList<AlbumData> {
 
         var albumList: ArrayList<AlbumData> = arrayListOf()
 
@@ -1529,12 +1539,13 @@ class Model {
             KEY_ALL_SERIES -> albumList = SeriesAlbums
             KEY_RECOMMENDED_TALKS -> albumList = RecommendedAlbums
 
-            else -> { }
+            else -> {
+            }
         }
 
         if (query != "") {
 
-            var filteredAlbumList : ArrayList<AlbumData> = arrayListOf()
+            var filteredAlbumList: ArrayList<AlbumData> = arrayListOf()
 
             var filter = query.toLowerCase()
             for (album in albumList) {
@@ -1551,11 +1562,11 @@ class Model {
     }
 
 
-    fun getTalks(content: String, query: String) : ArrayList<TalkData> {
+    fun getTalks(content: String, query: String): ArrayList<TalkData> {
 
         var talkList: ArrayList<TalkData> = arrayListOf()
 
-        when(content) {
+        when (content) {
 
             KEY_ALLTALKS -> {
                 talkList = AllTalks
@@ -1618,13 +1629,13 @@ class Model {
             KEY_SANGHA_SHAREHISTORY -> talkList = SanghaShareHistoryAlbum
             KEY_SANGHA_TALKHISTORY -> talkList = SanghaTalkHistoryAlbum
 
-            else ->  talkList = KeyToTalks[content] ?: arrayListOf()
+            else -> talkList = KeyToTalks[content] ?: arrayListOf()
 
         }
 
         if (query != "") {
 
-            var filteredTalkList : ArrayList<TalkData> = arrayListOf()
+            var filteredTalkList: ArrayList<TalkData> = arrayListOf()
 
             var filter = query.toLowerCase()
             for (talk in talkList) {
@@ -1644,11 +1655,11 @@ class Model {
     }
 
 
-    fun getAlbumStats(content: String) : AlbumStats {
+    fun getAlbumStats(content: String): AlbumStats {
 
         var stats: AlbumStats?
 
-        when(content) {
+        when (content) {
 
             KEY_ALLTALKS -> stats = KeyToAlbumStats[content]
 
@@ -1659,7 +1670,7 @@ class Model {
             else -> stats = KeyToAlbumStats[content]
         }
 
-        if (stats == null) stats = AlbumStats(0,0, "0:0:0")
+        if (stats == null) stats = AlbumStats(0, 0, "0:0:0")
 
         return stats
     }
@@ -1695,9 +1706,9 @@ class Model {
     }
 
 
-    fun getUserAlbumTalks(userAlbum: UserAlbumData) : ArrayList<TalkData> {
+    fun getUserAlbumTalks(userAlbum: UserAlbumData): ArrayList<TalkData> {
 
-        var userAlbumTalks : ArrayList<TalkData> = arrayListOf()
+        var userAlbumTalks: ArrayList<TalkData> = arrayListOf()
 
         userAlbum.TalkFileNames.forEachIndexed { _, talkFileName ->
 
@@ -1714,7 +1725,7 @@ class Model {
     fun saveUserAlbumTalks(userAlbum: UserAlbumData, talks: ArrayList<TalkData>) {
 
 
-        var talkFileNames : ArrayList<String> = arrayListOf()
+        var talkFileNames: ArrayList<String> = arrayListOf()
         for (talk in talks) {
             talkFileNames.add(talk.FileName)
         }
@@ -1728,7 +1739,7 @@ class Model {
     }
 
 
-    fun isMostRecentTalk(talk: TalkData) : Boolean {
+    fun isMostRecentTalk(talk: TalkData): Boolean {
 
         if (UserTalkHistoryAlbum.isEmpty()) return false
         if (UserTalkHistoryAlbum.last().FileName != talk.FileName) return false
@@ -1743,7 +1754,7 @@ class Model {
 
         val excessTalkCount = UserTalkHistoryAlbum.count() - MAX_USERTALKHISTORY_COUNT
         if (excessTalkCount > 0) {
-            for (i in 0 .. excessTalkCount) {
+            for (i in 0..excessTalkCount) {
                 UserTalkHistoryAlbum.removeAt(0)
             }
         }
@@ -1759,7 +1770,7 @@ class Model {
 
         val excessTalkCount = UserShareHistoryAlbum.count() - MAX_USERSHAREHISTORY_COUNT
         if (excessTalkCount > 0) {
-            for (i in 0 .. excessTalkCount) {
+            for (i in 0..excessTalkCount) {
                 UserShareHistoryAlbum.removeAt(0)
             }
         }
@@ -1784,7 +1795,7 @@ class Model {
     }
 
 
-    fun isFavoriteTalk(talk: TalkData) : Boolean {
+    fun isFavoriteTalk(talk: TalkData): Boolean {
 
         val isFavorite = (UserFavorites[talk.FileName] != null)
         return isFavorite
@@ -1806,13 +1817,13 @@ class Model {
         computeUserDownloadStats()
     }
 
-    fun isDownloadTalk(talk: TalkData) : Boolean {
+    fun isDownloadTalk(talk: TalkData): Boolean {
 
         return UserDownloads.containsKey(talk.FileName)
     }
 
 
-    fun isCompletedDownloadTalk(talk: TalkData) : Boolean {
+    fun isCompletedDownloadTalk(talk: TalkData): Boolean {
 
         var downloadComplete = false
         if (UserDownloads.containsKey(talk.FileName)) {
@@ -1822,7 +1833,7 @@ class Model {
     }
 
 
-    fun isDownloadInProgress(talk: TalkData) : Boolean {
+    fun isDownloadInProgress(talk: TalkData): Boolean {
 
         var downloadInProgress = false
         if (UserDownloads.containsKey(talk.FileName)) {
@@ -1837,7 +1848,7 @@ class Model {
         //
         // if there is a note text for this talk fileName, then save it in the note dictionary
         // otherwise clear this note dictionary entry
-        if (noteText.count() > 0 ) {
+        if (noteText.count() > 0) {
             UserNotes[talkFileName] = noteText
 
         } else {
@@ -1850,23 +1861,23 @@ class Model {
     }
 
 
-    fun getNoteForTalk(talkFileName: String) : String {
+    fun getNoteForTalk(talkFileName: String): String {
 
         var userNote = UserNotes[talkFileName]
 
-        if (userNote == null) userNote =  ""
+        if (userNote == null) userNote = ""
 
         return userNote
     }
 
 
-    fun isNotatedTalk(talk: TalkData) : Boolean {
+    fun isNotatedTalk(talk: TalkData): Boolean {
 
         return (UserNotes.containsKey(talk.FileName))
     }
 
 
-    fun secondsToDurationDisplay(totalTimeInSeconds: Int) : String {
+    fun secondsToDurationDisplay(totalTimeInSeconds: Int): String {
 
         val hours = totalTimeInSeconds / 3600
         val modHours = totalTimeInSeconds % 3600
@@ -1881,45 +1892,46 @@ class Model {
     }
 
 
-    fun convertDurationToSeconds(duration: String) : Int {
+    fun convertDurationToSeconds(duration: String): Int {
 
         var totalSeconds: Int
-        var hours : Int = 0
-        var minutes : Int = 0
-        var seconds : Int = 0
+        var hours: Int = 0
+        var minutes: Int = 0
+        var seconds: Int = 0
         if (duration != "") {
             val durationArray = duration.split(":")
             val count = durationArray.count()
             if (count == 3) {
-                hours  = durationArray[0].toInt()
-                minutes  = durationArray[1].toInt()
-                seconds  = durationArray[2].toInt()
+                hours = durationArray[0].toInt()
+                minutes = durationArray[1].toInt()
+                seconds = durationArray[2].toInt()
             } else if (count == 2) {
-                hours  = 0
-                minutes  = durationArray[0].toInt()
-                seconds  = durationArray[1].toInt()
+                hours = 0
+                minutes = durationArray[0].toInt()
+                seconds = durationArray[1].toInt()
             } else if (count == 1) {
                 hours = 0
-                minutes  = 0
-                seconds  = durationArray[0].toInt()
+                minutes = 0
+                seconds = durationArray[0].toInt()
 
-            } else {}
+            } else {
+            }
         }
         totalSeconds = (hours * 3600) + (minutes * 60) + seconds
         return totalSeconds
     }
 
 
-    fun deviceRemainingFreeSpaceInBytes() : Long {
+    fun deviceRemainingFreeSpaceInBytes(): Long {
 
-        val stat =  StatFs(Environment.getExternalStorageDirectory().getPath())
+        val stat = StatFs(Environment.getExternalStorageDirectory().getPath())
         val bytesAvailable = stat.getBlockSizeLong() * stat.getBlockCountLong()
         //val megAvailable = bytesAvailable / 1048576;
         return bytesAvailable
     }
 
 
-    fun doesTalkHaveTranscript(talk: TalkData) : Boolean {
+    fun doesTalkHaveTranscript(talk: TalkData): Boolean {
 
         if (talk.PDF.toLowerCase().contains("http:")) return true
         if (talk.PDF.toLowerCase().contains("https:")) return true
@@ -1927,7 +1939,7 @@ class Model {
     }
 
 
-    fun isFullURL(url: String) : Boolean {
+    fun isFullURL(url: String): Boolean {
 
         if (url.toLowerCase().contains("http:")) return true
         if (url.toLowerCase().contains("https:")) return true
@@ -1935,13 +1947,13 @@ class Model {
     }
 
 
-    fun getFileNameFromPath(url: String) : String {
+    fun getFileNameFromPath(url: String): String {
 
         val terms = url.split(delimiters = "/")
         return terms.last()
     }
 
-    fun getTalkForFileName(fileName: String?) : TalkData? {
+    fun getTalkForFileName(fileName: String?): TalkData? {
 
         if (FileNameToTalk.containsKey(fileName))
             return FileNameToTalk[fileName]
@@ -1949,7 +1961,50 @@ class Model {
         return null
     }
 
+    fun remoteURLExists(URLName: String): Boolean {
 
+        println("AD: remoteURLExists")
+        println(URLName)
+        try {
+            HttpURLConnection.setFollowRedirects(true)
+
+            val con = URL(URLName).openConnection() as HttpURLConnection
+            con.setRequestMethod("HEAD")
+            var code: Int = con.getResponseCode()
+            //println(code)
+
+            if (code == 404)
+                return false
+            else
+                return true
+        } catch (e: Exception) {
+            //e.printStackTrace()
+        }
+
+        return false
+
+
+    }
+
+    fun getFullTalkURL(talk: TalkData): String {
+
+        var talkURL: String
+
+        if (TheDataModel.isFullURL(talk.URL))
+        {
+            talkURL = talk.URL
+        }
+        else if (USE_NATIVE_MP3PATHS == true)
+        {
+            talkURL = URL_MP3_HOST + talk.URL
+
+        } else
+        {
+            talkURL = URL_MP3_HOST + "/" + talk.FileName
+        }
+
+        return talkURL
+    }
 
     //
     // DEV TEST

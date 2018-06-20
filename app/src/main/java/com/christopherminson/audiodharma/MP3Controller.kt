@@ -17,7 +17,15 @@ import android.support.v7.app.AlertDialog
 import android.webkit.WebView
 import com.christopherminson.audiodharma.R.id.StatusHeader
 import android.graphics.PorterDuff
-
+import android.os.Looper
+import android.support.v4.content.ContextCompat.startActivity
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
+import java.net.HttpURLConnection
+import java.net.*;
+import java.io.*;
+import java.net.HttpURLConnection.*
+import java.nio.file.Files.exists
 
 
 enum class TALK_PLAY_STATE { INIT, LOADING, PLAYING, PAUSED, STOPPED } // all mp3 states
@@ -31,6 +39,8 @@ var PlayingTalk : TalkData = TalkData()     // talk we are playing
 var PlayTalkList : ArrayList<TalkData> = arrayListOf()  // the list the talk is in
 var PlayTalkIndex: Int = 0      // the index of the talk
 var SecondsIntoTalk: Int = 0    // how far into the talk we are
+
+var TalkIsReachable: Boolean = false
 
 
 class MP3Controller : AppCompatActivity() {
@@ -273,7 +283,6 @@ class MP3Controller : AppCompatActivity() {
 
         TalkPlayState = TALK_PLAY_STATE.PLAYING
 
-        println("AD: Starting Talk")
         TheMediaPlayer?.setOnPreparedListener(object : MediaPlayer.OnPreparedListener {
 
             override fun onPrepared(p0: MediaPlayer?) {
@@ -298,33 +307,53 @@ class MP3Controller : AppCompatActivity() {
             url = MP3_DOWNLOADS_PATH + "/" + PlayingTalk.FileName
 
             try {
+                println(url)
                 val fileStream = FileInputStream(url)
                 TheMediaPlayer?.setDataSource(fileStream.fd)
+                TheMediaPlayer?.prepareAsync()
+                updateDisplayHeader()
 
             } catch (e: Exception) {
 
                 stopTalk()
                 BusyIndicator.visibility = View.INVISIBLE
 
-                val dialog = AlertDialog.Builder(this).create()
+                val dialog = AlertDialog.Builder(this@MP3Controller).create()
                 dialog.setTitle("Could Not Play Talk")
                 dialog.setMessage("The talk is not fully downloaded. Try again in a few minutes.")
                 dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", { _, _ -> })
                 dialog.show()
-                return
             }
 
         } else {
 
-            println("AD: Starting Talk 2")
+            var talkURL = TheDataModel.getFullTalkURL(PlayingTalk)
+            println(talkURL)
 
-            url = URL_MP3_HOST + PlayingTalk.URL
-            TheMediaPlayer?.setDataSource(url)
+            TheMediaPlayer?.setDataSource(talkURL)
+            TheMediaPlayer?.prepareAsync()
+            updateDisplayHeader()
+
+            doAsync() {
+
+                val exists = TheDataModel.remoteURLExists(talkURL)
+                uiThread {
+
+                    if (exists == false) {
+
+                        stopTalk()
+                        BusyIndicator.visibility = View.INVISIBLE
+
+                        val dialog = AlertDialog.Builder(this@MP3Controller).create()
+                        dialog.setTitle("All Things Are Transient")
+                        dialog.setMessage("This talk is currently unavailable.  It may have been moved or is being updated.  Please try again later.")
+                        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", { _, _ -> })
+                        dialog.show()
+                    }
+                }
+            }
         }
 
-        TheMediaPlayer?.prepareAsync()
-
-        updateDisplayHeader()
     }
 
 

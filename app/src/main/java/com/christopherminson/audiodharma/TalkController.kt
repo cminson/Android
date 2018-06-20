@@ -26,6 +26,8 @@ import com.christopherminson.audiodharma.R.id.attribute1
 import com.christopherminson.audiodharma.R.id.attribute2
 
 import android.os.Message
+import java.net.HttpURLConnection
+import java.net.URL
 import java.nio.file.Files.find
 
 var SHARE_CHOOSER = 1
@@ -107,7 +109,7 @@ open class AbstractTalkController : AppCompatActivity() {
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.setType("text/plain")
 
-        val url = URL_MP3_HOST + talk.URL
+        val url = TheDataModel.getFullTalkURL(talk)
         val message = "The following talk has been shared from the android Audio Dharma app\n\n$url"
         shareIntent.putExtra(Intent.EXTRA_TEXT, message)
         setResult(RESULT_OK, shareIntent)
@@ -387,9 +389,22 @@ abstract class AbstractListAdapter(context: AbstractTalkController, content: Str
         notifyDataSetChanged()
 
         doAsync {
-            TheDataModel.downloadMP3(talk)
+            val exists = TheDataModel.downloadMP3(talk)
             uiThread {
+
+                if (exists == false) {
+
+                    TheDataModel.unsetTalkAsDownload(talk)
+
+                    val dialog = AlertDialog.Builder(ControllerContext).create()
+                    dialog.setTitle("All Things Are Transient")
+                    dialog.setMessage("This talk is currently unavailable.  It may have been moved or is being updated.  Please try again later.")
+                    dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", { _, _ -> })
+                    dialog.show()
+                }
+
                 notifyDataSetChanged()
+
             }
         }
     }
