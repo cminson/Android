@@ -55,6 +55,8 @@ var CONFIG_REPORT_ACTIVITY_PATH = "/AudioDharmaAppBackend/Access/reportactivity.
 var CONFIG_GET_ACTIVITY_PATH = "/AudioDharmaAppBackend/Access/XGETACTIVITY.php?"        // where to get sangha activity (shares, listens)
 val DEFAULT_MP3_PATH = "https://www.audiodharma.org"     // where to get talks
 val DEFAULT_DONATE_PATH = "https://audiodharma.org/donate/"       // where to donate
+val CONFIG_GET_SIMILAR_TALKS = "/AudioDharmaAppBackend/Access/XGETSIMILARTALKS.php?KEY="           // where to get similar talks
+
 
 var HTTPResultCode: Int = 0     // global status of web access
 val MIN_EXPECTED_RESPONSE_SIZE = 300   // to filter for bogus redirect page responses
@@ -67,6 +69,7 @@ enum class INIT_CODES {          // all possible startup results
 var URL_CONFIGURATION = HostAccessPoint + CONFIG_ACCESS_PATH
 var URL_REPORT_ACTIVITY = HostAccessPoint + CONFIG_REPORT_ACTIVITY_PATH
 var URL_GET_ACTIVITY = HostAccessPoint + CONFIG_GET_ACTIVITY_PATH
+var URL_GET_SIMILAR = HostAccessPoint + CONFIG_GET_SIMILAR_TALKS
 var URL_MP3_HOST = DEFAULT_MP3_PATH
 var URL_DONATE = DEFAULT_DONATE_PATH
 
@@ -134,6 +137,7 @@ enum class ACTIVITIES {          // all possible activities that are reported ba
 val KEY_ALBUMROOT = "KEY_ALBUMROOT"
 val KEY_TALKS = "KEY_TALKS"
 val KEY_ALLTALKS = "KEY_ALLTALKS"
+val KEY_SIMILARTALKS = "KEY_SIMILARTALKS"
 val KEY_GIL_FRONSDAL = "Gil Fronsdal"
 val KEY_ANDREA_FELLA = "Andrea Fella"
 val KEY_ALLSPEAKERS = "KEY_ALLSPEAKERS"
@@ -287,6 +291,54 @@ class Model {
 
         downloadAndConfigure(URL_CONFIGURATION)
     }
+
+
+    fun downloadSimilarityData(talkFileName: String) {
+
+        if (TheDataModel.isInternetAvailable() == false) return
+
+        val similarKeyName = talkFileName.replace(".mp3", "")
+
+        var responseData: String?
+        var path = URL_GET_SIMILAR + similarKeyName
+
+        try {
+            responseData = URL(path).readText()
+
+        } catch (e: Exception) {
+            return
+        }
+
+        var similarTalks = ArrayList<TalkData>()
+        var jsonObj: JSONObject?
+        try {
+            jsonObj = JSONObject(responseData)
+        } catch (e: Exception) {
+            return
+        }
+
+        var talkJSONList: JSONArray = JSONArray()
+        try {
+            talkJSONList = jsonObj.getJSONArray("SIMILAR")
+        } catch (e: Exception) {
+        }
+
+        for (i in 0..talkJSONList.length() - 1) {
+            val jsonDict = talkJSONList.getJSONObject(i)
+
+            var fileName = jsonDict.getArg("filename") ?: ""
+            if (this.FileNameToTalk.containsKey(fileName) == false) continue
+
+            val similarTalk = FileNameToTalk[fileName]
+            if (similarTalk != null) {
+                similarTalks.add(similarTalk)
+            }
+
+        }
+        this.KeyToTalks[talkFileName] = similarTalks
+
+    }
+
 
     fun resetData() {
 
@@ -808,6 +860,7 @@ class Model {
             this.KeyToAlbumStats[dataContent] = stats
         }
     }
+
 
     // timer:  load sangha (community) information every UPDATE_SANGHA_INTERVAL seconds
     fun startSanghaHistoryTimer(): Timer {
@@ -1569,6 +1622,9 @@ class Model {
         when (content) {
 
             KEY_ALLTALKS -> {
+                talkList = AllTalks
+            }
+            KEY_SIMILARTALKS -> {
                 talkList = AllTalks
             }
             KEY_DHARMETTES -> {

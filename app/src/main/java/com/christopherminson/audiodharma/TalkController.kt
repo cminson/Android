@@ -135,6 +135,28 @@ open class AbstractTalkController : AppCompatActivity() {
         val intent = Intent(this, MP3Controller::class.java)
         this.startActivity(intent)
     }
+
+    fun showSimilarTalks(talk: TalkData) {
+
+        doAsync {
+
+            TheDataModel.downloadSimilarityData(talk.FileName)
+
+            uiThread {
+                var message = TalkRefreshHandler?.obtainMessage(1)
+                message?.sendToTarget()
+            }
+        }
+
+
+        val intent = Intent(this, TalkController::class.java)
+
+        intent.putExtra("CONTENT", talk.FileName)
+        intent.putExtra("TITLE", "Similar Talks: " + talk.Title)
+
+
+        this.startActivity(intent)
+    }
 }
 
 
@@ -295,6 +317,8 @@ abstract class AbstractListAdapter(context: AbstractTalkController, content: Str
         var menuFavorite = popup.menu.findItem(R.id.favorite)
         var menuDownload = popup.menu.findItem(R.id.download)
         var menuNote = popup.menu.findItem(R.id.note)
+        var menuSimilar = popup.menu.findItem(R.id.similar)
+
 
         if (TheDataModel.isFavoriteTalk(talk)) menuFavorite.setTitle("Delete Favorite")
         if (TheDataModel.isDownloadTalk(talk)) menuDownload.setTitle("Delete Download")
@@ -303,6 +327,12 @@ abstract class AbstractListAdapter(context: AbstractTalkController, content: Str
         popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
             override fun onMenuItemClick(item: MenuItem): Boolean {
                 when (item.itemId) {
+
+                    R.id.similar -> {
+
+                        ControllerContext.showSimilarTalks(talk)
+                        return true
+                    }
 
                     R.id.favorite -> {
 
