@@ -393,9 +393,13 @@ class Model {
             inputStream.close()
             outputStream.close()
         } catch (e: Exception) {
-            //"EXCEPTION".LOG()
-            e.printStackTrace()
-            return
+
+            // this occurs if virtualdharma config is unreachable for some reason
+            // we should NOT return here, but continue with the thread
+            // if there was a previous download of the config we will use that
+            // otherwise we fail gracefully
+            "COULD NOT REACH WEB".LOG()
+            //e.printStackTrace()
         }
 
         // unzip it

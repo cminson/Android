@@ -59,11 +59,11 @@ class AlbumController : AbstractAlbumController() {
         setSupportActionBar(myToolbar)
 
         if (TheDataModel.isInternetAvailable() == true) {
-            getSupportActionBar()?.setTitle("Audio Dharma Create")
+            getSupportActionBar()?.setTitle("Audio Dharma ")
             //getSupportActionBar()?.setTitle("Audio Dharma Create $TimeToLoadNewData $TotalModelUpdates")
 
         } else {
-            getSupportActionBar()?.setTitle("Audio Dharma Create (Offline)")
+            getSupportActionBar()?.setTitle("Audio Dharma (Offline)")
         }
 
         val launch_screen = findViewById<View>(R.id.splashscreen_earth)

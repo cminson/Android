@@ -576,6 +576,9 @@ class TalksListAdapter(context: AbstractTalkController, content: String, query: 
                 titleTextView.text = title + " - " + SelectedTalk?.Speaker
             } else {
                 titleTextView.text = title
+                //titleTextView.text = title + " - " + SelectedTalk?.Speaker
+
+
             }
         }
 
@@ -647,6 +650,7 @@ class TalksHistoryListAdapter(context: AbstractTalkController, content: String, 
         } else {
 
             titleTextView.text = title
+            //titleTextView.text = title + " - " + SelectedTalk?.Speaker
         }
 
         if (TheDataModel.isCompletedDownloadTalk(SelectedTalk!!)) {
