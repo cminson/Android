@@ -54,6 +54,8 @@ var CONFIG_REPORT_ACTIVITY_PATH = "/AudioDharmaAppBackend/Access/reportactivity.
 //var CONFIG_GET_ACTIVITY_PATH = "/AudioDharmaAppBackend/Access/getactivity.php"           // where to get sangha activity (shares, listens)
 var CONFIG_GET_ACTIVITY_PATH = "/AudioDharmaAppBackend/Access/XGETACTIVITY.php?"        // where to get sangha activity (shares, listens)
 val DEFAULT_MP3_PATH = "https://www.audiodharma.org"     // where to get talks
+//val DEFAULT_MP3_PATH = "https://media.audiodharma.org"
+
 val DEFAULT_DONATE_PATH = "https://audiodharma.org/donate/"       // where to donate
 val CONFIG_GET_SIMILAR_TALKS = "/AudioDharmaAppBackend/Access/XGETSIMILARTALKS.php?KEY="           // where to get similar talks
 
@@ -889,11 +891,10 @@ class Model {
 
     fun downloadMP3(talk: TalkData) : Boolean {
 
-
-        //"downloadMP3".LOG()
-
         // remote source path for file
         var requestURL = getFullTalkURL(talk)
+
+        //requestURL.LOG()
         if (remoteURLExists(requestURL) == false) {return false}
 
         // local destination path for file
@@ -901,15 +902,39 @@ class Model {
 
         this.UserDownloads[talk.FileName] = false
 
-        var responseData = URL(requestURL).readBytes()
-        var inputStream: InputStream = responseData.inputStream()
+        try {
+            var responseData = URL(requestURL).readBytes()
 
-        var outFile = File(localPathMP3)
-        outFile.setReadable(true, false)
-        var outputStream = FileOutputStream(outFile)
-        inputStream.copyTo(outputStream)
-        inputStream.close()
-        outputStream.close()
+            //CJM NOTE for this horrible hack:
+            //Some talks are in the form of symbolic links on the AD server.
+            //These talks seem to be confined to their Recommended Talks section
+            //Android doesn't seem to follow these links and a small packet
+            //is returned vs the mp3 itself.  In such cases we test for a
+            //small packet and if one is found try a different URL root.
+            if (responseData.size < 1000) {
+
+                "downloadMP3 Redirect!".LOG()
+                requestURL = "https://media.audiodharma.org/" + talk.URL
+                requestURL.LOG()
+                responseData = URL(requestURL).readBytes()
+
+                if (responseData.size < 1000) { // if second attempt failed, give up
+                    return false
+                }
+            }
+
+            var inputStream: InputStream = responseData.inputStream()
+
+            var outFile = File(localPathMP3)
+            outFile.setReadable(true, false)
+            var outputStream = FileOutputStream(outFile)
+            inputStream.copyTo(outputStream)
+            inputStream.close()
+            outputStream.close()
+        } catch (e: Exception) {
+            //e.printStackTrace()
+            return false
+        }
 
         this.UserDownloads[talk.FileName] = true
         this.saveUserDownloadData()
@@ -2031,14 +2056,14 @@ class Model {
             val con = URL(URLName).openConnection() as HttpURLConnection
             con.setRequestMethod("HEAD")
             var code: Int = con.getResponseCode()
-            //println(code)
+            println(code)
 
             if (code == 404)
                 return false
             else
                 return true
         } catch (e: Exception) {
-            //e.printStackTrace()
+            e.printStackTrace()
         }
 
         return false

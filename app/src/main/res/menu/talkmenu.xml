@@ -3,6 +3,10 @@
     >
 
     <item
+        android:id="@+id/similar"
+        android:title="Similar Talks"/>
+
+    <item
         android:id="@+id/favorite"
         android:title="Favorite"/>
 

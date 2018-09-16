@@ -2,7 +2,7 @@
 1) In Studio, select Build:Build APK(s)
 2) Locate the resulting apk
 3) Go to Play Console
-4) Select Release management: App releases
+4) Select Release management: App releases.  Click Production Manage.
 5) Click Create Release
 6) Drag APK into the APK window
 7) Edit release Note

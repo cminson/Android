@@ -428,7 +428,7 @@ abstract class AbstractListAdapter(context: AbstractTalkController, content: Str
 
                     val dialog = AlertDialog.Builder(ControllerContext).create()
                     dialog.setTitle("All Things Are Transient")
-                    dialog.setMessage("This talk is currently unavailable.  It may have been moved or is being updated.  Please try again later.")
+                    dialog.setMessage("This talk is currently unavailable.  An update might be in progress, or your connection isn't sufficient.  Please try again later.")
                     dialog.setButton(AlertDialog.BUTTON_POSITIVE, "OK", { _, _ -> })
                     dialog.show()
                 }
@@ -513,7 +513,12 @@ abstract class AbstractListAdapter(context: AbstractTalkController, content: Str
 
     fun refreshData() {
 
-        TalkListData = TheDataModel.getTalks(Content, "")
+
+        if (ControllerContext.IsSearchResults == false) {
+            //"refreshData".LOG()
+
+            TalkListData = TheDataModel.getTalks(Content, "")
+        }
     }
 
 }
@@ -522,6 +527,7 @@ abstract class AbstractListAdapter(context: AbstractTalkController, content: Str
 class TalksListAdapter(context: AbstractTalkController, content: String, query: String): AbstractListAdapter(context, content, query) {
 
     override fun getView(position: Int, p1: View?, viewGroup: ViewGroup?): View {
+
 
         val layoutInflator = LayoutInflater.from(ControllerContext)
 
