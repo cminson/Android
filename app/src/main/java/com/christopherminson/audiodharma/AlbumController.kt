@@ -3,25 +3,20 @@ package com.christopherminson.audiodharma
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.content.Intent.getIntent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import com.christopherminson.audiodharma.R.id.imageView
-import android.graphics.drawable.Drawable
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import android.net.ConnectivityManager
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
 import android.preference.PreferenceManager
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.startActivity
-import android.support.v7.widget.SearchView
+import androidx.core.content.ContextCompat
+import androidx.appcompat.widget.SearchView
 
-import android.support.v7.widget.Toolbar
-import android.util.Log
+import androidx.appcompat.widget.Toolbar
 import android.view.*
 import android.widget.*
 import org.jetbrains.anko.doAsync
@@ -341,7 +336,6 @@ class AlbumListAdapter(context: AbstractAlbumController, content: String, query:
             rowMain = layoutInflator.inflate(R.layout.row_album, viewGroup, false)
             var titleView = rowMain.findViewById<TextView>(R.id.title)
             var totalCountView = rowMain.findViewById<TextView>(R.id.attribute1)
-            var totalDurationView = rowMain.findViewById<TextView>(R.id.attribute2)
 
             val albumStats = TheDataModel.getAlbumStats(album.Content)
 
@@ -349,7 +343,6 @@ class AlbumListAdapter(context: AbstractAlbumController, content: String, query:
 
             titleView.text = album.Title
             totalCountView.text = formattedTalkCount
-            totalDurationView.text = albumStats.durationDisplay
 
             val imageView = rowMain.findViewById<ImageView>(R.id.imageView)
 

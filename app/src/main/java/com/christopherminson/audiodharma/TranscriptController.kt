@@ -3,7 +3,7 @@ package com.christopherminson.audiodharma
 
 import android.app.SearchManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.webkit.WebView
 
 
@@ -19,6 +19,8 @@ class TranscriptController : AppCompatActivity() {
 
         var webView = findViewById<WebView>(R.id.transcriptView)
         webView.settings.javaScriptEnabled = true
+
+        TheDataModel.reportTalkActivity(ACTIVITIES.READ_TRANSCRIPT, PlayingTalk)
 
         val url = intent.getStringExtra("URL")
 

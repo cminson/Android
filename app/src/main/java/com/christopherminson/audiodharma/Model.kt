@@ -18,7 +18,7 @@ import android.widget.TextView
 import kotlin.text.Typography.section
 import android.net.NetworkInfo
 import android.net.ConnectivityManager
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.github.kittinunf.fuel.httpPost
 import org.jetbrains.anko.doAsync
 import org.json.JSONArray
@@ -131,7 +131,7 @@ data class  UserLocation (       // where user geo info is kept
     )
 
 enum class ACTIVITIES {          // all possible activities that are reported back to cloud
-    SHARE_TALK, PLAY_TALK
+    SHARE_TALK, PLAY_TALK, DOWNLOAD_TALK, READ_TRANSCRIPT
 }
 
 // App Global Constants
@@ -267,6 +267,8 @@ class Model {
 
     fun loadData(context: Context) {
 
+        println("AD: loadData")
+
         StorageHandle = PreferenceManager.getDefaultSharedPreferences(context)
         setDeviceID()
 
@@ -376,6 +378,7 @@ class Model {
 
     fun downloadAndConfigure(path: String) {
 
+        print("AD: PATH HERE" + path)
         val pathZipFile = APP_ROOT_PATH + "/" + CONFIG_ZIP_NAME
         val pathJSONFile = APP_ROOT_PATH + "/" + CONFIG_JSON_NAME
 
@@ -408,6 +411,8 @@ class Model {
         if (responseData != null) {
             if (responseData.count() > MIN_EXPECTED_RESPONSE_SIZE) MyUnZip.unzip(pathZipFile, APP_ROOT_PATH)
         }
+
+        print("AD: HERE")
 
         // read it into a json object
         var configJSON: String
@@ -529,7 +534,7 @@ class Model {
                     Keys = keys,
                     SpeakerPhoto = speaker)
 
-
+            print(talkData.URL)
             if (doesTalkHaveTranscript(talkData)) {
                 talkData.Title = talkData.Title + " [transcript]"
             }
@@ -616,7 +621,7 @@ class Model {
         for (i in 0..albums.length() - 1) {
             val album = albums.getJSONObject(i)
 
-            var albumSection = album.getArg("section") ?: ""
+            var albumSection = album.getArg("section2") ?: ""
             var albumTitle = album.getArg("title") ?: ""
             var albumContent = album.getArg("content") ?: ""
             var albumImage = album.getArg("image") ?: ""
@@ -875,7 +880,7 @@ class Model {
 
         val timer = fixedRateTimer(name = "UPDATE_SANGHA_INTERVAL", daemon = true, initialDelay = interval, period = interval) {
 
-            //println("AD UPDATE_SANGHA_INTERVAL")
+            println("AD: UPDATE_SANGHA_INTERVAL")
 
             downloadSanghaActivity()
 
@@ -939,6 +944,7 @@ class Model {
         this.UserDownloads[talk.FileName] = true
         this.saveUserDownloadData()
 
+        this.reportTalkActivity(ACTIVITIES.DOWNLOAD_TALK, talk)
         return true
     }
 
@@ -950,6 +956,9 @@ class Model {
 
             ACTIVITIES.SHARE_TALK -> operation = "SHARETALK"
             ACTIVITIES.PLAY_TALK -> operation = "PLAYTALK"
+            ACTIVITIES.DOWNLOAD_TALK -> operation = "DOWNLOADTALK"
+            ACTIVITIES.READ_TRANSCRIPT -> operation = "READTRANSCRIPT"
+
         }
 
         val city = TheUserLocation.city
@@ -967,6 +976,7 @@ class Model {
         val parameters = "DEVICETYPE=$deviceType&DEVICEID=$DEVICE_ID&OPERATION=$operation&FILENAME=$fileName&CITY=$city&STATE=$state&COUNTRY=$country&ZIP=$zip&ALTITUDE=$altitude&LATITUDE=$latitude&LONGITUDE=$longitude"
         var url = URL_REPORT_ACTIVITY + '?' + parameters
 
+        print(URL_REPORT_ACTIVITY)
         url.httpPut().responseString { _, _, _ -> }
     }
 

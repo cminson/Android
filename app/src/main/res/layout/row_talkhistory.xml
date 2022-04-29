@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -47,7 +47,7 @@
         android:ellipsize="end"
         android:layout_height="15dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="9dp"
         android:text="10,999"
         android:textStyle="normal"
         android:textSize="10dp"
@@ -64,7 +64,7 @@
         android:ellipsize="end"
         android:layout_height="15dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="25dp"
         android:text="99,888:42:28"
         android:textStyle="normal"
         android:textSize="10dp"
@@ -74,21 +74,6 @@
         app:layout_constraintRight_toLeftOf="parent"
         />
 
-    <TextView
-        android:id="@+id/attribute3"
-        android:gravity="center"
-        android:layout_width="75dp"
-        android:layout_height="15dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="32dp"
-        android:text="99,888:42:28"
-        android:textStyle="normal"
-        android:textSize="10dp"
-        android:background="#00ffffff"
-        android:textColor="@color/defaultTextColor"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toLeftOf="parent"
-        />
 
     <Button
         android:id="@+id/menuButton"
@@ -125,4 +110,4 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

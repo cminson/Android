@@ -4,7 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.*
 import android.media.AudioManager
@@ -12,13 +12,13 @@ import android.view.ViewGroup
 import android.os.Handler
 import java.io.FileInputStream
 import android.preference.PreferenceManager
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
 import android.webkit.WebView
 import com.christopherminson.audiodharma.R.id.StatusHeader
 import android.graphics.PorterDuff
 import android.os.Looper
-import android.support.v4.content.ContextCompat.startActivity
+import androidx.core.content.ContextCompat.startActivity
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.net.HttpURLConnection
@@ -164,6 +164,7 @@ class MP3Controller : AppCompatActivity() {
             alertTalkUnavailable()
             return
         }
+        print(PlayingTalk)
 
         if (ResumeTalkMode == true) {
 

@@ -2,33 +2,22 @@ package com.christopherminson.audiodharma
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.support.v7.widget.SearchView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.appcompat.widget.SearchView
 import android.view.*
 import android.app.SearchManager
 import android.widget.*
-import android.app.Activity
-import android.app.Activity.RESULT_OK
-import android.app.PendingIntent.getActivity
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import android.os.Handler
 import android.os.Looper
-import android.support.v4.app.ActivityCompat.startActivityForResult
-import com.christopherminson.audiodharma.R.id.attribute1
-import com.christopherminson.audiodharma.R.id.attribute2
 
 import android.os.Message
-import java.net.HttpURLConnection
-import java.net.URL
-import java.nio.file.Files.find
 
 var SHARE_CHOOSER = 1
 var ContentBase = ""
@@ -619,7 +608,6 @@ class TalksHistoryListAdapter(context: AbstractTalkController, content: String, 
         val imageView = rowMain.findViewById<ImageView>(R.id.imageView)
         val attribute1 = rowMain.findViewById<TextView>(R.id.attribute1)
         val attribute2 = rowMain.findViewById<TextView>(R.id.attribute2)
-        val attribute3 = rowMain.findViewById<TextView>(R.id.attribute3)
 
         val isFavoriteImage = rowMain.findViewById<ImageView>(R.id.isFavorite)
         val isNoteImage = rowMain.findViewById<ImageView>(R.id.isNote)
@@ -665,7 +653,6 @@ class TalksHistoryListAdapter(context: AbstractTalkController, content: String, 
 
         attribute1.text = SelectedTalk?.CityPlayed
         attribute2.text = SelectedTalk?.StatePlayed + " " + SelectedTalk?.CountryPlayed
-        attribute3.text = SelectedTalk?.Date
 
         return rowMain
     }
